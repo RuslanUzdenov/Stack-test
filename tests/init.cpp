@@ -1,8 +1,8 @@
 #include <stack.hpp>
 #include <catch.hpp>
 #include <iostream>
-
 using namespace std;
+
 SCENARIO("count", "[count]"){
   Stack<int> s;
   s.push(1);
@@ -12,30 +12,53 @@ SCENARIO("count", "[count]"){
 SCENARIO("push", "[push]"){
   Stack<int> s;
   s.push(1);
-  REQUIRE(s.count() == 1);
-  REQUIRE(s.top() == 1);
+  REQUIRE(s.count()==1);
+
 }
 
-SCENARIO("pop", "[pop]"){
+SCENARIO("top", "[top]"){
   Stack<int> s;
   s.push(1);
-  REQUIRE(s.count() == 1);
-  REQUIRE(s.top() == 1);
-}
-
-SCENARIO("prisv", "[prisv]"){
-  Stack<int> s;
-  s.push(1);
-  Stack<int> s2;
-  s2=s;
-  REQUIRE(s.count() == s2.count());
-  REQUIRE(s.top() == s2.top());
-}
-
-SCENARIO("copy", "[copy]"){
-  Stack<int> s;
+  s.push(2);
   s.push(3);
-  Stack<int> s2(s);
-  REQUIRE(s2.count() == 1);
-  REQUIRE(s2.top() == 3);
+  s.pop();
+
+  REQUIRE(s.top()==2);
+}
+SCENARIO("operprisv", "[operprisv]"){
+  Stack<int> s1;
+  s1.push(1);
+  Stack<int> s2;
+  s2=s1;
+  REQUIRE(s1.count()==s2.count());
+}
+
+SCENARIO("const", "[constr]"){
+  Stack<int> s1;
+  s1.push(1);
+  Stack<int> s2=s1;
+  REQUIRE(s1.count()==s2.count());
+}
+
+SCENARIO("empty", "[empty]"){
+  Stack<int> s1;
+  s1.push(1);
+  REQUIRE(s1.empty()==false);
+}
+
+SCENARIO("empty2", "[empty2]"){
+  Stack<int> s1;
+  s1.push(1);
+  s1.pop();
+  REQUIRE(s1.empty()==true);
+}
+
+SCENARIO("empty3", "[empty3]"){
+  Stack<int> s1;
+  s1.push(1);
+  s1.push(2);
+  s1.pop();
+  s1.top();
+  
+  REQUIRE(s1.empty()==false);
 }
