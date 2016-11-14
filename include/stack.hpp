@@ -51,7 +51,9 @@ private:
 template<typename T>
 Stack<T>::Stack()
         : array_size_(0),
-          count_(0) { }
+          count_(0), 
+          array_(nullptr)
+          { }
 
 template<typename T>
 Stack<T>::~Stack() {
@@ -120,7 +122,9 @@ Stack<T>& Stack<T>::operator=(const Stack<T> &tmp) {
     }   else {
         count_ = tmp.count_;
         array_size_ = tmp.array_size_;
-        delete[] array_;
+        if (array) {
+            delete[] array_;
+        }
         array_ = new_with_copy(tmp.array_, count_, array_size_);
     
     }
