@@ -3,7 +3,6 @@
 #include <iostream>
 
 using namespace std;
-
 SCENARIO("count", "[count]"){
   Stack<int> s;
   s.push(1);
@@ -40,4 +39,3 @@ SCENARIO("copy", "[copy]"){
   REQUIRE(s2.count() == 1);
   REQUIRE(s2.top() == 3);
 }
-
