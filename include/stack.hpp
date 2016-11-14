@@ -92,7 +92,7 @@ void Stack<T>::pop() {
     if (is_empty()) {
         throw std::logic_error("Stack is empty!");
     }
-    --count;
+    --count_;
 }
 
 template <typename T>
