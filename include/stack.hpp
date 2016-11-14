@@ -1,11 +1,11 @@
 #ifndef stack_hpp
 #define stack_hpp
 #pragma once
+
 #include <iostream>
 #include <cstdlib>
 #include <string>
 #include <stdexcept>
-
 using namespace std;
 
 size_t max(size_t a, size_t b) {
@@ -15,7 +15,11 @@ size_t max(size_t a, size_t b) {
 template <typename T>
 T* new_with_copy(const T *tmp, size_t count, size_t array_size) {  /* strong */
     T *array_ = new T[array_size];
-    copy(tmp, tmp + count, array_);
+    try{ copy(tmp, tmp + count, array_); }
+    catch (...){
+        delete[] array_;
+        throw;
+    }
     return array_;
 }
 
@@ -35,11 +39,8 @@ public:
     void push(T const &); /* strong */
 
     void pop();  /* strong */
-    
-    T top() const; /* noexcept */
 
-    bool is_empty() const; /* noexcept */
-
+    const T& top();    /* strong */
 private:
     void grow(); /* strong */
 
@@ -51,13 +52,11 @@ private:
 template<typename T>
 Stack<T>::Stack()
         : array_size_(0),
-          count_(0), 
-          array_(nullptr)
-          { }
+          count_(0) { }
 
 template<typename T>
 Stack<T>::~Stack() {
-    if (!is_empty()) {
+    if (count_ != 0) {
         delete[] array_;
     }
 }
@@ -72,63 +71,57 @@ void Stack<T>::push(T const &element) {
     if (array_size_ == count_) {
         grow();
     }
-    array_[count_++] = element;
+    array_[count_] = element;
+    count_++;
 }
 
 template<typename T>
 void Stack<T>::grow() {
     size_t new_array_size_ = max(1, array_size_ * 2);
     T *new_array_ = new_with_copy(array_, count_, new_array_size_);
-    if (!is_empty()) {
+    if (count_ != 0) {
         delete[] array_;
     }
     array_ = new_array_;
     array_size_ = new_array_size_;
-    return;
 }
 
 template<typename T>
 void Stack<T>::pop() {
-    if (is_empty()) {
+    if (count_ == 0) {
         throw std::logic_error("Stack is empty!");
     }
     --count_;
 }
 
 template <typename T>
-T Stack<T>::top() const {
-    if (is_empty()) {
+Stack<T>::Stack(const Stack &tmp)
+{
+    array_ = new_with_copy(tmp.array_, tmp.count_, tmp.array_size_);
+    count_ = tmp.count_;
+    array_size_ = tmp.array_size_;
+}
+
+template <typename T>
+Stack<T>& Stack<T>::operator=(const Stack<T> &tmp) {
+    if (this != &tmp) {
+        if (count_ != 0) {
+            delete[] array_;
+        }
+        array_ = new_with_copy(tmp.array_, tmp.count_, tmp.array_size_);
+        count_ = tmp.count_;
+        array_size_ = tmp.array_size_;
+    }
+    return *this;
+}
+
+template <typename T>
+const T& Stack<T>::top() {
+    if (count_ == 0) {
         throw std::logic_error("Stack is empty!");
     }
     return array_[count_ - 1];
 }
 
-template<typename T>
-bool Stack<T>::is_empty() const {
-    return count_ == 0;
-}
-
-template <typename T>
-Stack<T>::Stack(const Stack &tmp)
-        :   count_(tmp.count_),
-            array_size_(tmp.array_size_)
-{
-    array_ = new_with_copy(tmp.array_, count_, array_size_);
-}
-
-template <typename T>
-Stack<T>& Stack<T>::operator=(const Stack<T> &tmp) {
-    if (this == &tmp) {
-    }   else {
-        count_ = tmp.count_;
-        array_size_ = tmp.array_size_;
-        if (array_) {
-            delete[] array_;
-        }
-        array_ = new_with_copy(tmp.array_, count_, array_size_);
-    
-    }
-    return *this;
-}
 
 #endif
