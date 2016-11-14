@@ -122,7 +122,7 @@ Stack<T>& Stack<T>::operator=(const Stack<T> &tmp) {
     }   else {
         count_ = tmp.count_;
         array_size_ = tmp.array_size_;
-        if (array) {
+        if (array_) {
             delete[] array_;
         }
         array_ = new_with_copy(tmp.array_, count_, array_size_);
