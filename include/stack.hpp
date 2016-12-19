@@ -1,4 +1,3 @@
-#endif
 #include <iostream>
 #include <memory>
 #include <thread>
